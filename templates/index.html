@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="mb-4">Всички студенти</h2>
+
+<table class="table table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Фак. №</th>
+      <th>Име</th>
+      <th>Фамилия</th>
+      <th>Специалност</th>
+      <th>Курс</th>
+      <th>Група</th>
+      <th>Email</th>
+      <th>Адрес</th>
+      <th>Град</th>
+      <th>Област</th>
+      <th>Телефон</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in students %}
+    <tr>
+      <td>{{ s.faculty_number }}</td>
+      <td>{{ s.first_name }}</td>
+      <td>{{ s.last_name }}</td>
+      <td>{{ s.specialty }}</td>
+      <td>{{ s.course }}</td>
+      <td>{{ s.group }}</td>
+      <td>{{ s.email }}</td>
+      <td>{{ s.address }}</td>
+      <td>{{ s.city }}</td>
+      <td>{{ s.state }}</td>
+      <td>{{ s.phone }}</td>
+      <td>
+        <div class="d-flex align-items-center">
+          <a href="{{ url_for('edit', student_id=s.id) }}"
+             class="btn btn-primary btn-sm">
+            Редактирай
+          </a>
+          <form action="{{ url_for('delete', student_id=s.id) }}"
+                method="POST"
+                class="ms-2"
+                onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този студент?');">
+            <button type="submit"
+                class="btn btn-danger btn-sm p-0 rounded-circle"
+                style="width:32px; height:32px; border:none; overflow:hidden;">
+              <img src="{{ url_for('static', filename='bin_logo.jpg') }}"
+                alt="Изтрий"
+                style="width:100%; height:100%; object-fit:cover; display:block;">
+            </button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<hr class="my-4">
+
+<h2 class="mb-3" id="add-form">Добави студент</h2>
+<form method="POST" novalidate>
+  {{ form.hidden_tag() }}
+
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      {{ form.faculty_number.label(class="form-label") }}
+      {{ form.faculty_number(class="form-control") }}
+      {% for e in form.faculty_number.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.first_name.label(class="form-label") }}
+      {{ form.first_name(class="form-control") }}
+      {% for e in form.first_name.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.last_name.label(class="form-label") }}
+      {{ form.last_name(class="form-control") }}
+      {% for e in form.last_name.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.email.label(class="form-label") }}
+      {{ form.email(class="form-control") }}
+      {% for e in form.email.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      {{ form.specialty.label(class="form-label") }}
+      {{ form.specialty(class="form-select", id="specialty-select") }}
+      {% for e in form.specialty.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-2 mb-3">
+      {{ form.course.label(class="form-label") }}
+      {{ form.course(class="form-select") }}
+      {% for e in form.course.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-2 mb-3">
+      {{ form.group.label(class="form-label") }}
+      {{ form.group(class="form-select", id="group-select") }}
+      {% for e in form.group.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-4 mb-3">
+      {{ form.phone.label(class="form-label") }}
+      {{ form.phone(class="form-control") }}
+      {% for e in form.phone.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      {{ form.address.label(class="form-label") }}
+      {{ form.address(class="form-control") }}
+      {% for e in form.address.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.city.label(class="form-label") }}
+      {{ form.city(class="form-control") }}
+      {% for e in form.city.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.state.label(class="form-label") }}
+      {{ form.state(class="form-control") }}
+      {% for e in form.state.errors %}
+        <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+</form>
+
+<script id="group-data" type="application/json">
+  {{ GROUP_MAP | tojson }}
+</script>
+<script>
+  const GROUP_MAP = JSON.parse(
+    document.getElementById('group-data').textContent
+  );
+  document.getElementById('specialty-select')
+    .addEventListener('change', function(){
+      const opts = GROUP_MAP[this.value] || [];
+      const grp = document.getElementById('group-select');
+      grp.innerHTML = '';
+      opts.forEach(([v, t]) => {
+        const o = document.createElement('option');
+        o.value = v; o.textContent = t;
+        grp.appendChild(o);
+      });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2 class="mb-4">Пълен списък на всички студенти</h2>
+
+  <table class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Фак. №</th><th>Име</th><th>Фамилия</th>
+        <th>Специалност</th><th>Курс</th><th>Група</th>
+        <th>Email</th><th>Адрес</th><th>Град</th>
+        <th>Област</th><th>Телефон</th><th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td>{{ s.faculty_number }}</td>
+        <td>{{ s.first_name }}</td>
+        <td>{{ s.last_name }}</td>
+        <td>{{ s.specialty }}</td>
+        <td>{{ s.course }}</td>
+        <td>{{ s.group }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.address }}</td>
+        <td>{{ s.city }}</td>
+        <td>{{ s.state }}</td>
+        <td>{{ s.phone }}</td>
+        <td>
+          <div class="d-flex align-items-center">
+            <a href="{{ url_for('edit', student_id=s.id) }}"
+               class="btn btn-primary btn-sm">
+              Редактирай
+            </a>
+            <form action="{{ url_for('delete', student_id=s.id) }}"
+                  method="POST"
+                  class="ms-2"
+                  onsubmit="return confirm('Сигурни ли сте?');">
+              <button type="submit"
+                class="btn btn-danger btn-sm p-0 rounded-circle"
+                style="width:32px; height:32px; border:none; overflow:hidden;">
+              <img src="{{ url_for('static', filename='bin_logo.jpg') }}"
+                alt="Изтрий"
+                style="width:100%; height:100%; object-fit:cover; display:block;">
+            </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

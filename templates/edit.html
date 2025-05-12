@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-4">Редактирай студент #{{ student.id }}</h2>
+
+<form method="POST" novalidate>
+  {{ form.hidden_tag() }}
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      {{ form.first_name.label(class="form-label") }}
+      {{ form.first_name(class="form-control") }}
+      {% for err in form.first_name.errors %}
+        <div class="text-danger small">{{ err }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-6 mb-3">
+      {{ form.last_name.label(class="form-label") }}
+      {{ form.last_name(class="form-control") }}
+      {% for err in form.last_name.errors %}
+        <div class="text-danger small">{{ err }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mb-3">
+    {{ form.email.label(class="form-label") }}
+    {{ form.email(class="form-control") }}
+    {% for err in form.email.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.address.label(class="form-label") }}
+    {{ form.address(class="form-control") }}
+    {% for err in form.address.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      {{ form.city.label(class="form-label") }}
+      {{ form.city(class="form-control") }}
+      {% for err in form.city.errors %}
+        <div class="text-danger small">{{ err }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-6 mb-3">
+      {{ form.state.label(class="form-label") }}
+      {{ form.state(class="form-control") }}
+      {% for err in form.state.errors %}
+        <div class="text-danger small">{{ err }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mb-3">
+    {{ form.phone.label(class="form-label") }}
+    {{ form.phone(class="form-control") }}
+    {% for err in form.phone.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
+
+  <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+</form>
+{% endblock %}
