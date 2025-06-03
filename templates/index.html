@@ -1,17 +1,71 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<div class="container-fluid px-2 px-lg-4"></div>
 <h2 class="mb-4">Всички студенти</h2>
 
+<form class="row row-cols-lg-auto g-2 align-items-end mb-3" method="get">
+  <div class="col">
+    <label class="form-label small">Специалност</label>
+    <select name="specialty" class="form-select">
+      <option value="">Всички</option>
+      {% for s in specialties %}
+        <option value="{{ s }}" {{ 'selected' if request_args.get('specialty')==s else '' }}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col">
+    <label class="form-label small">Курс</label>
+    <select name="course" class="form-select">
+      <option value="">Всички</option>
+      {% for c in courses %}
+        <option value="{{ c }}" {{ 'selected' if request_args.get('course')==c|string else '' }}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col">
+    <label class="form-label small">Група</label>
+    <select name="group" class="form-select">
+      <option value="">Всички</option>
+      {% for g in groups %}
+        <option value="{{ g }}" {{ 'selected' if request_args.get('group')==g else '' }}>{{ g }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col">
+    <button class="btn btn-secondary">Филтрирай</button>
+    <a href="{{ url_for('index') }}" class="btn btn-light">Изчисти</a>
+  </div>
+</form>
+
+
 <table class="table table-striped">
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    {% macro sort_link(col,title) -%}
+  {% set new_order = 'desc' if request_args.get('sort')==col and request_args.get('order')!='desc' else 'asc' %}
+  <a class="link-light text-decoration-none"
+     href="{{ url_for('index',
+                      sort=col, order=new_order,
+                      specialty=request_args.get('specialty'),
+                      course=request_args.get('course'),
+                      group=request_args.get('group')) }}">
+    {{ title }}
+    {% if request_args.get('sort')==col %}
+      {{ '↑' if request_args.get('order')!='desc' else '↓' }}
+    {% endif %}
+  </a>
+{%- endmacro %}
+
   <thead class="table-dark">
     <tr>
-      <th>Фак. №</th>
-      <th>Име</th>
-      <th>Фамилия</th>
-      <th>Специалност</th>
-      <th>Курс</th>
-      <th>Група</th>
+      <th>{{ sort_link('faculty_number','Фак. №') }}</th>
+      <th>{{ sort_link('first_name','Име') }}</th>
+      <th>{{ sort_link('last_name','Фамилия') }}</th>
+      <th>{{ sort_link('specialty','Специалност') }}</th>
+      <th>{{ sort_link('course','Курс') }}</th>
+      <th>{{ sort_link('group','Група') }}</th>
       <th>Email</th>
       <th>Адрес</th>
       <th>Град</th>
@@ -175,3 +229,4 @@
 </script>
 
 {% endblock %}
+</div>
