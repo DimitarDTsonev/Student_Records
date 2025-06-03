@@ -2,11 +2,13 @@ import os
 from sqlite3 import IntegrityError
 from flask import Flask, render_template, redirect, url_for, flash, request # type: ignore
 from dotenv import load_dotenv # type: ignore
+from sqlalchemy import asc, desc # type: ignore
 from models import db, Student
 from forms import StudentForm, SPECIALTY_CHOICES, GROUP_MAP
 
 load_dotenv()
 app = Flask(__name__)
+app.config.from_prefixed_env()
 app.config['SQLALCHEMY_DATABASE_URI']      = os.getenv('DATABASE_URI')
 app.config['SECRET_KEY']                   = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -50,13 +52,42 @@ def index():
                 flash('Студентът беше успешно добавен.', 'success')
                 return redirect(url_for('index'))
 
-    students = Student.query.order_by(Student.id.desc()).limit(10).all()
+        # --- филтри + сортиране ---
+    flt_spec   = request.args.get('specialty')
+    flt_course = request.args.get('course')
+    flt_group  = request.args.get('group')
+
+    sort  = request.args.get('sort',  'faculty_number')
+    order = request.args.get('order', 'asc')
+
+    q = Student.query
+    if flt_spec:
+        q = q.filter_by(specialty=flt_spec)
+    if flt_course:
+        q = q.filter_by(course=int(flt_course))
+    if flt_group:
+        q = q.filter_by(group=flt_group)
+
+    sort_attr = getattr(Student, sort, Student.faculty_number)
+    q = q.order_by(desc(sort_attr) if order == 'desc' else asc(sort_attr))
+
+    students = q.all()   # без limit
+
+    specialties = [s[0] for s in db.session.query(Student.specialty).distinct()]
+    courses     = sorted({s.course for s in Student.query.with_entities(Student.course)})
+    groups      = sorted({s.group  for s in Student.query.with_entities(Student.group)})
+
     return render_template(
         'index.html',
         form=form,
         students=students,
-        GROUP_MAP=GROUP_MAP
+        GROUP_MAP=GROUP_MAP,
+        specialties=specialties,
+        courses=courses,
+        groups=groups,
+        request_args=request.args
     )
+
 
 @app.route('/edit/<int:student_id>', methods=['GET', 'POST'])
 def edit(student_id):
