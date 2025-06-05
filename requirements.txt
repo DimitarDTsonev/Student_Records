@@ -1,9 +1,10 @@
  Flask==2.2.5
  Flask-WTF==1.1.1
  Flask-SQLAlchemy==2.5.1
- PyMySQL==1.0.2        # <— add or ensure this line is present
+ PyMySQL==1.0.2        
  python-dotenv==0.21.0
  gunicorn==20.1.0
- SQLAlchemy<2.0        # compatible with Flask-SQLAlchemy 2.x
- werkzeug<2.3          # compatible with Flask-WTF
+ SQLAlchemy<2.0        
+ werkzeug<2.3          
  email-validator==1.3.1
+ boto3~=1.34 
