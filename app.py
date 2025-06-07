@@ -7,18 +7,16 @@ from models import db, Student
 from forms import StudentForm, SPECIALTY_CHOICES, GROUP_MAP
 
 load_dotenv()
+
 app = Flask(__name__)
-app.config.from_prefixed_env()
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.getenv('DATABASE_URI')           
-    or 'sqlite:///students.db'          
-)
-app.config['SECRET_KEY']                   = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-default-secret')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
-with app.app_context():
-    db.create_all()
+db = SQLAlchemy(app)
+
+from models import Student
+from forms import StudentForm
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
