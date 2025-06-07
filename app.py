@@ -17,6 +17,11 @@ from extensions import db
 from models import Student
 from forms import StudentForm
 
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = StudentForm()
