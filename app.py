@@ -13,7 +13,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 from extensions import db
-db = SQLAlchemy(app)
 
 from models import Student
 from forms import StudentForm
