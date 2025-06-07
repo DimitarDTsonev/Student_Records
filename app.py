@@ -3,7 +3,6 @@ from sqlite3 import IntegrityError
 from flask import Flask, render_template, redirect, url_for, flash, request # type: ignore
 from dotenv import load_dotenv # type: ignore
 from sqlalchemy import asc, desc # type: ignore
-from models import db, Student
 from forms import StudentForm, SPECIALTY_CHOICES, GROUP_MAP
 
 load_dotenv()
@@ -13,6 +12,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-default-secret')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+from extensions import db
 db = SQLAlchemy(app)
 
 from models import Student
