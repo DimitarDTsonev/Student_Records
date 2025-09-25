@@ -1,0 +1,6 @@
+{
+  "name": "Student_Records",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install -r requirements.txt",
+  "forwardPorts": [5000]
+}
