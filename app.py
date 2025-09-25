@@ -57,7 +57,6 @@ def index():
                 flash('Студентът беше успешно добавен.', 'success')
                 return redirect(url_for('index'))
 
-        # --- филтри + сортиране ---
     flt_spec   = request.args.get('specialty')
     flt_course = request.args.get('course')
     flt_group  = request.args.get('group')
@@ -76,7 +75,7 @@ def index():
     sort_attr = getattr(Student, sort, Student.faculty_number)
     q = q.order_by(desc(sort_attr) if order == 'desc' else asc(sort_attr))
 
-    students = q.all()   # без limit
+    students = q.all()
 
     specialties = [s[0] for s in db.session.query(Student.specialty).distinct()]
     courses     = sorted({s.course for s in Student.query.with_entities(Student.course)})
