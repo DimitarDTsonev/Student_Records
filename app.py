@@ -8,16 +8,18 @@ from forms import StudentForm, SPECIALTY_CHOICES, GROUP_MAP
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-default-secret')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db_url = os.getenv("DATABASE_URL", "sqlite:///students.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret")
 
 from extensions import db
 
 from models import Student
 from forms import StudentForm
 
-db.init_app(app)
+db = SQLAlchemy(app)
 
 with app.app_context():
     db.create_all()
@@ -151,4 +153,4 @@ def students():
                            students=all_students)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
