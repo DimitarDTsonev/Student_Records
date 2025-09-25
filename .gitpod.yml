@@ -1,0 +1,21 @@
+image: gitpod/workspace-python
+
+ports:
+  - port: 5000
+    onOpen: open-browser
+
+tasks:
+  - name: Run app
+    command: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      # Ако app.py стартира сам приложението с app.run(...), просто го пусни:
+      if grep -q "app.run(" app.py; then
+        python app.py
+      else
+        # Иначе стартирай през Flask CLI и слушай на всички интерфейси:
+        export FLASK_APP=app.py
+        export FLASK_RUN_HOST=0.0.0.0
+        export FLASK_RUN_PORT=5000
+        flask run
+      fi
