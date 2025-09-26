@@ -1,10 +1,9 @@
 # Student Records
 
-[Open in GitHub Codespaces](https://codespaces.new/DimitarDTsonev/Student_Records)
-
 ## Live Demo (1‑click)
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/DimitarDTsonev/Student_Records)
+
 [Open in GitHub Codespaces](https://codespaces.new/DimitarDTsonev/Student_Records)
 
 ## Run locally
