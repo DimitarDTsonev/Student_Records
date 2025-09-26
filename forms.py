@@ -1,6 +1,6 @@
-from flask_wtf import FlaskForm # type: ignore
-from wtforms import StringField, SubmitField, SelectField # type: ignore
-from wtforms.validators import DataRequired, Email, Length, Regexp # type: ignore
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField
+from wtforms.validators import DataRequired, Email, Length, Regexp
 
 SPECIALTY_CHOICES = [
     ('КН','КН'),('СИ','СИ'),('И','И'),('ИС','ИС'),
