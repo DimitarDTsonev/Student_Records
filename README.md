@@ -2,7 +2,7 @@
 
 ## Live Demo (1‑click)
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/DimitarDTsonev/Student_Records)
+[![Open the site](https://img.shields.io/badge/Open%20site-Click%20to%20launch-blue)](https://DimitarDTsonev.github.io/Student_Records/)
 
 [Open in GitHub Codespaces](https://codespaces.new/DimitarDTsonev/Student_Records)
 
