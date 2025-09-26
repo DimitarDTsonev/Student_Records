@@ -1,16 +1,27 @@
 import os
 from sqlite3 import IntegrityError
-from flask import Flask, render_template, redirect, url_for, flash, request # type: ignore
-from dotenv import load_dotenv # type: ignore
-from sqlalchemy import asc, desc # type: ignore
+from flask import Flask, render_template, redirect, url_for, flash, request
+from dotenv import load_dotenv 
+from sqlalchemy import asc, desc
 from forms import StudentForm, SPECIALTY_CHOICES, GROUP_MAP
 
 load_dotenv()
 
+
+
+def pick_db_url():
+    url = os.getenv("DATABASE_URL")
+    if not url:
+        return "sqlite:///students.db"
+    if "://user:pass@host" in url or "@host:" in url or url.strip().endswith("@host:3306/dbname"):
+        return "sqlite:///students.db"
+    return url
+
 app = Flask(__name__)
 
-db_url = os.getenv("DATABASE_URL", "sqlite:///students.db")
+db_url = pick_db_url()
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+print("Using DB:", db_url)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret")
 
@@ -18,9 +29,7 @@ from extensions import db
 
 from models import Student
 from forms import StudentForm
-
-db = SQLAlchemy(app)
-
+db.init_app(app)
 with app.app_context():
     db.create_all()
 
